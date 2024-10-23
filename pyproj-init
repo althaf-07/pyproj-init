@@ -12,7 +12,7 @@ def create_project_structure(full_path):
     # Define the project directory structure
     directories = [
         project_path / "src",
-        project_path / "configs",
+        project_path / "config",
         project_path / "tests",
     ]
     files = [

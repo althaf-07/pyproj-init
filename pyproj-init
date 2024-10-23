@@ -1,0 +1,69 @@
+#!/usr/bin/env python3
+
+import os
+import argparse
+from pathlib import Path
+
+def create_project_structure(full_path):
+    # Extract project name and base path
+    project_path = Path(full_path).resolve()
+    project_name = project_path.name
+
+    # Define the project directory structure
+    directories = [
+        project_path / "src",
+        project_path / "configs",
+        project_path / "tests",
+    ]
+    files = [
+        project_path / ".gitignore",
+        project_path / "requirements.txt",
+        project_path / "LICENSE",
+        project_path / "pyproject.toml",
+        project_path / "README.md",
+        project_path / "src" / "__init__.py",
+        project_path / "src" / "main.py",
+        project_path / "tests" / "__init__.py",
+        project_path / "tests" / "test_main.py",
+    ]
+
+    # Create directories
+    for directory in directories:
+        os.makedirs(directory, exist_ok=True)
+        print(f"Created directory: {directory}")
+
+    # Create files
+    for file in files:
+        file.touch(exist_ok=True)
+        print(f"Created file: {file}")
+
+    # Create the virtual environment
+    venv_path = project_path / ".venv"
+    os.system(f"python3 -m venv {venv_path}")
+    print(f"Created virtual environment: {venv_path}")
+
+    # Initialize git repository
+    os.system(f"git -C {project_path} init")
+    print(f"Initialized git repository in: {project_path}")
+
+    # Add .venv to .gitignore
+    gitignore_path = project_path / ".gitignore"
+    with gitignore_path.open("a") as gitignore_file:
+        gitignore_file.write("# Virtual Environment\n.venv/\n")
+    print(f"Updated .gitignore to include .venv")
+
+    print(f"Project '{project_name}' structure setup completed successfully!")
+
+def main():
+    # Setup argument parser
+    parser = argparse.ArgumentParser(description="Setup a Python project structure.")
+    parser.add_argument("path", help="The full path including the project name.")
+    
+    # Parse arguments
+    args = parser.parse_args()
+    
+    # Create project structure
+    create_project_structure(args.path)
+
+if __name__ == "__main__":
+    main()
